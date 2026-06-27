@@ -3,8 +3,12 @@ name: Sextant Console Validation Pipeline
 on:
   push:
     branches: [ main ]
+
   pull_request:
     branches: [ main ]
+
+  # ✅ THIS ENABLES MANUAL RUN BUTTON
+  workflow_dispatch:
 
 jobs:
   validate:
@@ -16,7 +20,7 @@ jobs:
 
       - name: Validate core files exist
         run: |
-          echo "Checking Sextant Control Room structure..."
+          echo "Running manual/auto validation..."
 
           if [ ! -f "index.html" ]; then
             echo "ERROR: index.html missing"
@@ -31,19 +35,18 @@ jobs:
             echo "WARNING: simulator.html missing"
           fi
 
-          echo "Structure validation complete"
+          echo "Validation complete"
 
-      - name: Validate system folders
+      - name: Folder integrity check
         run: |
           for dir in core_engine dashboard assets backend cognitive_core; do
             if [ -d "$dir" ]; then
-              echo "$dir exists"
+              echo "OK: $dir exists"
             else
               echo "WARNING: $dir missing"
             fi
           done
 
-      - name: Final status report
+      - name: System status
         run: |
-          echo "Sextant Validation Pipeline Completed"
-          echo "System baseline appears operational"
+          echo "Sextant baseline validation finished successfully"
