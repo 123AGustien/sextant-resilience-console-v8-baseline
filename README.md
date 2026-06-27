@@ -9,6 +9,16 @@ It preserves the operational simulation architecture including FX, liquidity, ba
 
 ## 🌐 Core Live Systems (Historical Reference)
 
+## 🧭 Related System (Operations Console)
+
+This v8 baseline is linked to the active production system:
+
+🔗 Sextant Resilience Operations Console:
+https://github.com/123AGustien/sextant-resilience-operations-console
+
+🔗 Live Operations Console (GitHub Pages):
+https://123agustien.github.io/sextant-resilience-operations-console/
+
 ### 🧠 Control Room (Main Dashboard)
 https://123agustien.github.io/sextant-resilience-operations-console/
 
