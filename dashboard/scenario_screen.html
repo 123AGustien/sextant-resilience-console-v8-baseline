@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Sextant Scenario Screen (v8)</title>
+
+    <style>
+        body {
+            font-family: Arial;
+            background: #05070d;
+            color: #d7f7ff;
+            text-align: center;
+        }
+
+        h2 {
+            margin-top: 20px;
+        }
+
+        #state {
+            font-size: 26px;
+            margin: 10px;
+        }
+
+        .STABLE { color: #2bd4ff; }
+        .AMBER { color: orange; }
+        .CRITICAL { color: red; }
+
+        .panel {
+            max-width: 900px;
+            margin: auto;
+            background: #0b0f14;
+            border: 1px solid #2bd4ff;
+            padding: 15px;
+            text-align: left;
+        }
+
+        .bar {
+            height: 20px;
+            margin: 5px 0;
+            background: #1c2a33;
+            position: relative;
+        }
+
+        .fill {
+            height: 100%;
+            background: #2bd4ff;
+        }
+
+        button {
+            margin: 5px;
+            padding: 10px;
+        }
+    </style>
+</head>
+
+<body>
+
+<h2>Scenario Control Screen</h2>
+
+<div id="state">READY</div>
+
+<div class="panel">
+    <h3>System Stress Map</h3>
+
+    <div>FX</div>
+    <div class="bar"><div id="fx" class="fill"></div></div>
+
+    <div>BANK</div>
+    <div class="bar"><div id="bank" class="fill"></div></div>
+
+    <div>LIQUIDITY</div>
+    <div class="bar"><div id="liq" class="fill"></div></div>
+
+    <div>EQUITY</div>
+    <div class="bar"><div id="eq" class="fill"></div></div>
+
+    <div>CONFIDENCE</div>
+    <div class="bar"><div id="conf" class="fill"></div></div>
+</div>
+
+<br>
+
+<button onclick="runScenario('us_china_tension')">US–China Tension</button>
+<button onclick="runScenario('liquidity_injection')">Liquidity Injection</button>
+<button onclick="runScenario('normal')">Normal</button>
+
+<script src="../core_engine/simulation_engine.js"></script>
+
+<script>
+
+function runScenario(type) {
+
+    const stress =
+        type === "us_china_tension" ? 0.85 :
+        type === "liquidity_injection" ? 0.35 :
+        0.5;
+
+    const result = window.runSimulation({
+        name: type,
+        stress: stress
+    });
+
+    // STATE
+    const state = document.getElementById("state");
+    state.innerText = result.final_state;
+    state.className = result.final_state;
+
+    // SYSTEM BARS
+    setBar("fx", result.system.fx);
+    setBar("bank", result.system.bank);
+    setBar("liq", result.system.liq);
+    setBar("eq", result.system.eq);
+    setBar("conf", result.system.conf);
+}
+
+function setBar(id, value) {
+    document.getElementById(id).style.width = (value * 100) + "%";
+}
+
+</script>
+
+</body>
+</html>
