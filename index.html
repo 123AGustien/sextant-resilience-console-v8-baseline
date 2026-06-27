@@ -47,9 +47,8 @@
 
 <div id="riskGraph"></div>
 
-<!-- ENGINE LOADING -->
-<script src="core_engine/rp04-engine-v10.js"></script>
-<script src="core_engine/bootstrap.js"></script>
+<!-- ENGINE + MODULES -->
+<script src="core_engine/simulation_engine.js"></script>
 <script src="assets/risk_graph.js"></script>
 
 <script>
@@ -68,7 +67,7 @@ window.addEventListener("load", () => {
 
     if (!engineLoaded) {
         document.getElementById("output").innerText =
-            "❌ ENGINE NOT LOADED\nMissing:\ncore_engine/rp04-engine-v10.js\ncore_engine/bootstrap.js";
+            "❌ ENGINE NOT LOADED\nCheck:\ncore_engine/simulation_engine.js";
         return;
     }
 
@@ -101,8 +100,17 @@ function run(type) {
 
 </script>
 
+<!-- NAVIGATION TO SCENARIO SCREEN -->
+<br><br>
+
 <button onclick="run('cascade')">Cascade</button>
 <button onclick="run('failure')">Failure</button>
+
+<br><br>
+
+<button onclick="location.href='dashboard/scenario_screen.html'">
+    Scenario Screen
+</button>
 
 </body>
 </html>
