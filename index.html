@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Sextant Control Room v8 Baseline</title>
+
+    <style>
+        body {
+            font-family: Arial;
+            background: #05070d;
+            color: #d7f7ff;
+            text-align: center;
+        }
+
+        #status {
+            font-size: 22px;
+            margin: 10px;
+        }
+
+        .STABLE { color: #2bd4ff; }
+        .AMBER { color: orange; }
+        .CRITICAL { color: red; }
+
+        pre {
+            text-align: left;
+            max-width: 900px;
+            margin: auto;
+            background: #0b0f14;
+            padding: 10px;
+            border: 1px solid #2bd4ff;
+            overflow-x: auto;
+        }
+
+        button {
+            margin: 5px;
+            padding: 10px;
+        }
+    </style>
+</head>
+
+<body>
+
+<h2>Sextant Control Room (v8 Baseline)</h2>
+
+<div id="status">READY</div>
+
+<pre id="output">Waiting for simulation...</pre>
+
+<div id="riskGraph"></div>
+
+<!-- ENGINE LOADING -->
+<script src="core_engine/rp04-engine-v10.js"></script>
+<script src="core_engine/bootstrap.js"></script>
+<script src="assets/risk_graph.js"></script>
+
+<script>
+
+let engineLoaded = false;
+
+function safeRiskPush(data) {
+    if (window.RiskGraph && typeof window.RiskGraph.push === "function") {
+        window.RiskGraph.push(data);
+    }
+}
+
+window.addEventListener("load", () => {
+
+    engineLoaded = typeof window.runSimulation === "function";
+
+    if (!engineLoaded) {
+        document.getElementById("output").innerText =
+            "❌ ENGINE NOT LOADED\nMissing:\ncore_engine/rp04-engine-v10.js\ncore_engine/bootstrap.js";
+        return;
+    }
+
+    safeRiskPush({ impact: 0 });
+});
+
+function run(type) {
+
+    if (!engineLoaded) {
+        alert("Engine not loaded");
+        return;
+    }
+
+    const result = window.runSimulation({
+        name: type,
+        stress: type === "cascade" ? 0.9 : 0.6
+    });
+
+    document.getElementById("output").innerText =
+        JSON.stringify(result, null, 2);
+
+    const status = document.getElementById("status");
+    status.innerText = result.final_state || "UNKNOWN";
+    status.className = result.final_state || "AMBER";
+
+    safeRiskPush({
+        impact: (result.fx?.pressure_score ?? 0) * 100
+    });
+}
+
+</script>
+
+<button onclick="run('cascade')">Cascade</button>
+<button onclick="run('failure')">Failure</button>
+
+</body>
+</html>
